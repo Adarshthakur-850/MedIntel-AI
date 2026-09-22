@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=77.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "MedIntel AI — Multimodal Medical Intelligence Platform"
 readme = "README.md"
 requires-python = ">=3.10"
-license = { text = "MIT" }
+license = "MIT"
 authors = [
     { name = "MedIntel AI Engineering Team", email = "research@medintel.ai" }
 ]
@@ -54,6 +54,22 @@ dev = [
     "mypy>=1.8.0"
 ]
 
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+    "apps*",
+    "ml*",
+    "rag*",
+    "pipelines*",
+    "monitoring*"
+]
+exclude = [
+    "tests*",
+    "data*",
+    "docker*",
+    "configs*"
+]
+
 [tool.pytest.ini_options]
 minversion = "6.0"
 addopts = "-ra -q --tb=short"
@@ -67,7 +83,7 @@ pythonpath = [
 
 [tool.black]
 line-length = 88
-target-version = ['py310']
+target-version = ["py310"]
 
 [tool.isort]
 profile = "black"
