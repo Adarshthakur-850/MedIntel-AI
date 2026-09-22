@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "medintel-ai"
+version = "0.1.0"
+description = "MedIntel AI — Multimodal Medical Intelligence Platform"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+    { name = "MedIntel AI Engineering Team", email = "research@medintel.ai" }
+]
+
+dependencies = [
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "pydantic>=2.6.0",
+    "sqlalchemy>=2.0.25",
+    "psycopg2-binary>=2.9.9",
+    "alembic>=1.13.1",
+    "python-jose[cryptography]>=3.3.0",
+    "passlib[bcrypt]>=1.7.4",
+    "python-multipart>=0.0.6",
+    "pandas>=2.2.0",
+    "numpy>=1.26.3",
+    "scikit-learn>=1.4.0",
+    "xgboost>=2.0.3",
+    "lightgbm>=4.3.0",
+    "torch>=2.2.0",
+    "torchvision>=0.17.0",
+    "transformers>=4.37.2",
+    "shap>=0.44.1",
+    "sentence-transformers>=2.3.1",
+    "faiss-cpu>=1.7.4",
+    "mlflow>=2.10.0",
+    "dvc>=3.43.0",
+    "prometheus-client>=0.19.0",
+    "pillow>=10.2.0",
+    "matplotlib>=3.8.2",
+    "pyyaml>=6.0.1",
+    "requests>=2.31.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
+    "httpx>=0.26.0",
+    "black>=24.1.0",
+    "isort>=5.13.2",
+    "flake8>=7.0.0",
+    "mypy>=1.8.0"
+]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q --tb=short"
+testpaths = [
+    "tests"
+]
+pythonpath = [
+    ".",
+    "apps/backend"
+]
+
+[tool.black]
+line-length = 88
+target-version = ['py310']
+
+[tool.isort]
+profile = "black"
+line_length = 88

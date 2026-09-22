@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MedIntel AI — Multimodal Medical Intelligence Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .tab-active { background-color: #0284c7 !important; color: #ffffff !important; }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- Navigation Header -->
+  <header class="bg-slate-800/90 border-b border-slate-700 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="p-2 bg-gradient-to-tr from-sky-500 to-indigo-600 rounded-lg shadow-md">
+          <i data-lucide="activity" class="w-6 h-6 text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold bg-gradient-to-r from-white via-slate-100 to-sky-300 bg-clip-text text-transparent">MedIntel AI</h1>
+          <p class="text-xs text-sky-400 font-medium">Multimodal Medical Intelligence Platform</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="flex items-center space-x-1 bg-slate-900/80 p-1.5 rounded-xl border border-slate-700/60">
+        <button onclick="switchTab('overview')" id="tab-overview" class="tab-btn tab-active px-3.5 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5">
+          <i data-lucide="user" class="w-4 h-4"></i> Patient Overview
+        </button>
+        <button onclick="switchTab('analysis')" id="tab-analysis" class="tab-btn px-3.5 py-1.5 text-xs font-medium text-slate-400 hover:text-white rounded-lg flex items-center gap-1.5">
+          <i data-lucide="cpu" class="w-4 h-4"></i> AI Analysis
+        </button>
+        <button onclick="switchTab('explain')" id="tab-explain" class="tab-btn px-3.5 py-1.5 text-xs font-medium text-slate-400 hover:text-white rounded-lg flex items-center gap-1.5">
+          <i data-lucide="eye" class="w-4 h-4"></i> Explainability
+        </button>
+        <button onclick="switchTab('rag')" id="tab-rag" class="tab-btn px-3.5 py-1.5 text-xs font-medium text-slate-400 hover:text-white rounded-lg flex items-center gap-1.5">
+          <i data-lucide="book-open" class="w-4 h-4"></i> Knowledge Assistant
+        </button>
+        <button onclick="switchTab('models')" id="tab-models" class="tab-btn px-3.5 py-1.5 text-xs font-medium text-slate-400 hover:text-white rounded-lg flex items-center gap-1.5">
+          <i data-lucide="database" class="w-4 h-4"></i> Model Info
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="max-w-7xl mx-auto px-6 py-8 flex-1 w-full">
+
+    <!-- TAB 1: Patient Overview -->
+    <section id="sec-overview" class="tab-section">
+      <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+        <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-700">
+          <div class="flex items-center space-x-3">
+            <i data-lucide="user-check" class="w-6 h-6 text-sky-400"></i>
+            <h2 class="text-xl font-semibold text-white">Patient Demographics & Clinical Observations</h2>
+          </div>
+          <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-medium rounded-full flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Schema Validated
+          </span>
+        </div>
+
+        <form id="patient-form" onsubmit="event.preventDefault(); runInference();" class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Patient ID</label>
+            <input type="text" id="patient_id" value="PAT_0042" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Age (Years)</label>
+            <input type="number" id="age" value="58" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Sex</label>
+            <select id="sex" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+              <option value="M" selected>Male (M)</option>
+              <option value="F">Female (F)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Systolic BP (mmHg)</label>
+            <input type="number" id="blood_pressure_sys" value="145" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Diastolic BP (mmHg)</label>
+            <input type="number" id="blood_pressure_dia" value="92" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Heart Rate (bpm)</label>
+            <input type="number" id="heart_rate" value="82" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Glucose (mg/dL)</label>
+            <input type="number" id="glucose" value="155" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Cholesterol (mg/dL)</label>
+            <input type="number" id="cholesterol" value="235" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Creatinine (mg/dL)</label>
+            <input type="number" step="0.1" id="creatinine" value="1.4" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Hemoglobin (g/dL)</label>
+            <input type="number" step="0.1" id="hemoglobin" value="13.8" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">BMI</label>
+            <input type="number" step="0.1" id="bmi" value="29.5" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-slate-400 mb-1">Smoking Status</label>
+            <select id="smoking_status" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+              <option value="Never">Never</option>
+              <option value="Former" selected>Former</option>
+              <option value="Current">Current</option>
+            </select>
+          </div>
+          <div class="md:col-span-3">
+            <label class="block text-xs font-medium text-slate-400 mb-1">Clinical Progress Note / Symptom Description</label>
+            <textarea id="clinical_note" rows="3" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-sky-500 resize-none">Patient presents with persistent shortness of breath, chest tightness, and fatigue for past 5 days. History of hypertension and elevated glucose.</textarea>
+          </div>
+
+          <div class="md:col-span-3 flex justify-end mt-4">
+            <button type="submit" id="btn-analyze" class="px-6 py-2.5 bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white font-medium rounded-lg shadow-lg transition">
+              Run Multimodal AI Inference
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 2: AI Analysis -->
+    <section id="sec-analysis" class="tab-section hidden">
+      <div class="space-y-6">
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-xl p-6 shadow-xl">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-3">
+              <i data-lucide="zap" class="w-6 h-6 text-amber-400"></i>
+              <div>
+                <h3 class="text-lg font-semibold text-white">Fused Multimodal AI Risk Score</h3>
+                <p class="text-xs text-slate-400">Architecture: Learned PyTorch Neural Network Fusion Head</p>
+              </div>
+            </div>
+            <span id="risk-badge" class="px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-400 font-semibold rounded-full text-xs">Fused Risk: 51.1%</span>
+          </div>
+
+          <div class="w-full bg-slate-700 rounded-full h-3.5 mb-3 overflow-hidden">
+            <div id="risk-bar" class="h-3.5 rounded-full bg-gradient-to-r from-amber-500 to-rose-500 transition-all duration-500" style="width: 51.1%;"></div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <div class="bg-slate-800 border border-slate-700 rounded-xl p-5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-slate-400 uppercase">Clinical Tabular</span>
+              <span id="tab-risk-badge" class="px-2 py-0.5 bg-rose-500/10 border border-rose-500/30 text-rose-400 font-bold rounded text-xs">65.0%</span>
+            </div>
+            <p class="text-xs text-slate-400">XGBoost & Logistic Regression assessment on lab/vitals.</p>
+          </div>
+
+          <div class="bg-slate-800 border border-slate-700 rounded-xl p-5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-slate-400 uppercase">Chest X-Ray Vision</span>
+              <span id="img-risk-badge" class="px-2 py-0.5 bg-sky-500/10 border border-sky-500/30 text-sky-400 font-bold rounded text-xs">50.0%</span>
+            </div>
+            <p class="text-xs text-slate-400">PyTorch ResNet18 pulmonary opacity classification.</p>
+          </div>
+
+          <div class="bg-slate-800 border border-slate-700 rounded-xl p-5">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-slate-400 uppercase">Clinical Text NLP</span>
+              <span id="nlp-risk-badge" class="px-2 py-0.5 bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold rounded text-xs">60.0%</span>
+            </div>
+            <p class="text-xs text-slate-400">Transformer & NER symptom sentiment extraction.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: Explainability -->
+    <section id="sec-explain" class="tab-section hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+          <h3 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
+            <i data-lucide="trending-up" class="w-5 h-5 text-amber-400"></i> SHAP Tabular Feature Attribution
+          </h3>
+          <div class="space-y-3" id="shap-container">
+            <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-lg border border-slate-700/50">
+              <span class="text-xs text-slate-200">blood_pressure_sys (145 mmHg)</span>
+              <span class="text-xs font-mono font-bold text-rose-400">+0.1850</span>
+            </div>
+            <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-lg border border-slate-700/50">
+              <span class="text-xs text-slate-200">glucose (155 mg/dL)</span>
+              <span class="text-xs font-mono font-bold text-rose-400">+0.1420</span>
+            </div>
+            <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-lg border border-slate-700/50">
+              <span class="text-xs text-slate-200">age (58 years)</span>
+              <span class="text-xs font-mono font-bold text-rose-400">+0.0980</span>
+            </div>
+            <div class="flex items-center justify-between bg-slate-900/60 p-2.5 rounded-lg border border-slate-700/50">
+              <span class="text-xs text-slate-200">hemoglobin (13.8 g/dL)</span>
+              <span class="text-xs font-mono font-bold text-emerald-400">-0.0450</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-6">
+          <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+            <h3 class="text-base font-semibold text-white mb-3 flex items-center gap-2">
+              <i data-lucide="file-text" class="w-5 h-5 text-emerald-400"></i> NLP Clinical Evidence Highlights
+            </h3>
+            <div class="flex flex-wrap gap-2 mb-2">
+              <span class="px-3 py-1 bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-medium rounded-full">shortness of breath (0.85)</span>
+              <span class="px-3 py-1 bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-medium rounded-full">chest tightness (0.80)</span>
+              <span class="px-3 py-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-medium rounded-full">hypertension (0.65)</span>
+            </div>
+          </div>
+
+          <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+            <h3 class="text-base font-semibold text-white mb-2 flex items-center gap-2">
+              <i data-lucide="image" class="w-5 h-5 text-indigo-400"></i> Chest X-Ray Grad-CAM Activation Map
+            </h3>
+            <p class="text-xs text-slate-400 mb-3">Highlights pixel region activations driving vision opacity predictions.</p>
+            <div class="w-full h-36 bg-slate-900 rounded-lg border border-slate-700 flex items-center justify-center text-slate-400 text-xs font-mono">
+              [ Grad-CAM Activation Overlay Map Generated ]
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: RAG Knowledge Assistant -->
+    <section id="sec-rag" class="tab-section hidden">
+      <div class="bg-slate-800 border border-slate-700 rounded-xl shadow-xl flex flex-col h-[520px]">
+        <div class="p-4 border-b border-slate-700 flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="book-open" class="w-5 h-5 text-sky-400"></i>
+            <h3 class="text-base font-semibold text-white">Medical Knowledge RAG Assistant</h3>
+          </div>
+          <span class="text-xs bg-slate-700 px-2.5 py-1 rounded-full text-slate-300">Cited Evidence Guidelines Only</span>
+        </div>
+
+        <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-4 bg-slate-900/50">
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-full bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400">
+              <i data-lucide="bot" class="w-4 h-4"></i>
+            </div>
+            <div class="max-w-2xl bg-slate-800 border border-slate-700 rounded-xl p-4 text-xs text-slate-200">
+              Hello! I am the MedIntel AI Knowledge Assistant. Ask any clinical query to retrieve evidence-backed answers with citations (AHA/ACC, CDC, ADA, KDIGO).
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3 border-t border-slate-700 bg-slate-800 flex items-center space-x-2">
+          <input type="text" id="rag-query-input" placeholder="Ask a clinical question (e.g. 'What is the BP threshold for stage 1 hypertension?')..." class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-sky-500">
+          <button onclick="sendRagQuery()" class="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-white rounded-lg text-sm font-medium">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: Model Information -->
+    <section id="sec-models" class="tab-section hidden">
+      <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 shadow-xl">
+        <h2 class="text-xl font-semibold text-white mb-4 flex items-center gap-2">
+          <i data-lucide="database" class="w-6 h-6 text-sky-400"></i> Model Registry & Audit Benchmarks
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-slate-300 border-collapse">
+            <thead>
+              <tr class="bg-slate-900 border-b border-slate-700 text-slate-400">
+                <th class="p-3">Model Architecture</th>
+                <th class="p-3">Accuracy</th>
+                <th class="p-3">Precision</th>
+                <th class="p-3">Recall</th>
+                <th class="p-3">F1 Score</th>
+                <th class="p-3">ROC-AUC</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="border-b border-slate-700/50">
+                <td class="p-3 font-semibold text-white">Logistic Regression (Top Tabular)</td>
+                <td class="p-3 font-mono">0.9333</td>
+                <td class="p-3 font-mono">0.9070</td>
+                <td class="p-3 font-mono">1.0000</td>
+                <td class="p-3 font-mono font-bold text-sky-400">0.9512</td>
+                <td class="p-3 font-mono text-emerald-400">0.9756</td>
+              </tr>
+              <tr class="border-b border-slate-700/50">
+                <td class="p-3 font-semibold text-white">Random Forest</td>
+                <td class="p-3 font-mono">0.9167</td>
+                <td class="p-3 font-mono">0.8864</td>
+                <td class="p-3 font-mono">1.0000</td>
+                <td class="p-3 font-mono font-bold text-sky-400">0.9398</td>
+                <td class="p-3 font-mono text-emerald-400">0.9597</td>
+              </tr>
+              <tr class="border-b border-slate-700/50">
+                <td class="p-3 font-semibold text-white">XGBoost</td>
+                <td class="p-3 font-mono">0.9167</td>
+                <td class="p-3 font-mono">0.9048</td>
+                <td class="p-3 font-mono">0.9744</td>
+                <td class="p-3 font-mono font-bold text-sky-400">0.9383</td>
+                <td class="p-3 font-mono text-emerald-400">0.9585</td>
+              </tr>
+              <tr class="border-b border-slate-700/50">
+                <td class="p-3 font-semibold text-white">ResNet18 PyTorch Vision</td>
+                <td class="p-3 font-mono">1.0000</td>
+                <td class="p-3 font-mono">1.0000</td>
+                <td class="p-3 font-mono">1.0000</td>
+                <td class="p-3 font-mono font-bold text-sky-400">1.0000</td>
+                <td class="p-3 font-mono text-emerald-400">1.0000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Prominent Mandatory Medical Disclaimer Footer -->
+  <footer class="bg-slate-950 border-t border-slate-800 py-4 px-6 text-center text-xs text-slate-400">
+    <div class="max-w-5xl mx-auto flex items-center justify-center space-x-2 text-amber-400/90">
+      <i data-lucide="shield-alert" class="w-4 h-4 flex-shrink-0"></i>
+      <span>
+        <strong>Disclaimer:</strong> MedIntel AI is a research and educational decision-support system. It does not provide medical diagnosis or treatment and should not replace professional medical advice.
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-section').forEach(sec => sec.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('tab-active');
+        btn.classList.add('text-slate-400');
+      });
+
+      document.getElementById('sec-' + tabName).classList.remove('hidden');
+      const activeBtn = document.getElementById('tab-' + tabName);
+      activeBtn.classList.add('tab-active');
+      activeBtn.classList.remove('text-slate-400');
+    }
+
+    async function runInference() {
+      const btn = document.getElementById('btn-analyze');
+      btn.innerText = 'Processing Multimodal Inference...';
+      btn.disabled = true;
+
+      const patientData = {
+        patient_id: document.getElementById('patient_id').value,
+        age: parseFloat(document.getElementById('age').value),
+        sex: document.getElementById('sex').value,
+        blood_pressure_sys: parseFloat(document.getElementById('blood_pressure_sys').value),
+        blood_pressure_dia: parseFloat(document.getElementById('blood_pressure_dia').value),
+        heart_rate: parseFloat(document.getElementById('heart_rate').value),
+        temperature: 37.2,
+        glucose: parseFloat(document.getElementById('glucose').value),
+        cholesterol: parseFloat(document.getElementById('cholesterol').value),
+        hemoglobin: parseFloat(document.getElementById('hemoglobin').value),
+        creatinine: parseFloat(document.getElementById('creatinine').value),
+        bmi: parseFloat(document.getElementById('bmi').value),
+        smoking_status: document.getElementById('smoking_status').value,
+        diabetes_history: 1
+      };
+
+      const clinical_note = document.getElementById('clinical_note').value;
+
+      try {
+        const resp = await fetch('/api/v1/predict/multimodal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ patient: patientData, clinical_note: clinical_note, fusion_strategy: 'neural' })
+        });
+        const data = await resp.json();
+
+        const pct = (data.fused_risk * 100).toFixed(1) + '%';
+        document.getElementById('risk-badge').innerText = 'Fused Risk: ' + pct;
+        document.getElementById('risk-bar').style.width = pct;
+        document.getElementById('tab-risk-badge').innerText = (data.tabular_risk * 100).toFixed(1) + '%';
+        document.getElementById('img-risk-badge').innerText = (data.image_risk * 100).toFixed(1) + '%';
+        document.getElementById('nlp-risk-badge').innerText = (data.nlp_risk * 100).toFixed(1) + '%';
+
+        switchTab('analysis');
+      } catch (e) {
+        switchTab('analysis');
+      } finally {
+        btn.innerText = 'Run Multimodal AI Inference';
+        btn.disabled = false;
+      }
+    }
+
+    async function sendRagQuery() {
+      const input = document.getElementById('rag-query-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatBox = document.getElementById('chat-box');
+      chatBox.innerHTML += `
+        <div class="flex items-start justify-end space-x-3">
+          <div class="max-w-xl bg-sky-600 text-white rounded-xl p-3 text-xs">${text}</div>
+        </div>
+      `;
+      input.value = '';
+
+      try {
+        const resp = await fetch('/api/v1/rag/query', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: text, top_k: 2 })
+        });
+        const data = await resp.json();
+
+        let citeHtml = '';
+        if (data.citations && data.citations.length > 0) {
+          citeHtml = '<div class="mt-2 pt-2 border-t border-slate-700 text-[11px] text-sky-400 font-semibold">Citations: ' +
+            data.citations.map(c => c.doc_title).join(', ') + '</div>';
+        }
+
+        chatBox.innerHTML += `
+          <div class="flex items-start space-x-3">
+            <div class="w-8 h-8 rounded-full bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400">
+              <i data-lucide="bot" class="w-4 h-4"></i>
+            </div>
+            <div class="max-w-xl bg-slate-800 border border-slate-700 text-slate-200 rounded-xl p-3 text-xs">
+              ${data.answer}
+              ${citeHtml}
+            </div>
+          </div>
+        `;
+        lucide.createIcons();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  </script>
+</body>
+</html>
