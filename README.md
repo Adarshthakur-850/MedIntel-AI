@@ -37,6 +37,11 @@
 - **Backend**: FastAPI REST API with Pydantic schemas, JWT authentication, rate limiting, and PostgreSQL storage.
 - **Frontend**: React + TypeScript interactive dashboard with visual risk indicators, SHAP charts, Grad-CAM overlays, and RAG chat interface.
 
+<img width="1346" height="976" alt="Screenshot 2026-04-13 010710" src="https://github.com/user-attachments/assets/a4488880-1e28-4cff-b487-611702ad1835" />
+<img width="1345" height="976" alt="Screenshot 2026-04-13 010656" src="https://github.com/user-attachments/assets/4615e745-15a8-4929-bfeb-8c57a40addbd" />
+
+
+
 ---
 
 ## 3. System Architecture
